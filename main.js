@@ -1158,28 +1158,49 @@
         }
 
         /**
-         * Find current space from header and render grouped list
+         * Determine current context from the room list header and either
+         * render the grouped list for a space or restore Element’s default list.
+         *
+         * Restores default list when:
+         * - No header is present
+         * - The header indicates the Home tab
+         * - A space matching the header cannot be found
+         * @returns {Promise<void>}
          */
         async function updateGroupedList() {
             const header = document.querySelector(".mx_RoomListHeaderView_title h1[title]");
             const headerName = header ? (header.getAttribute("title") || header.textContent || "").trim() : "";
 
-            if (!headerName) {
-                // No header = not in a space, restore default
+            // Helper: restore Element's default Virtuoso room list
+            const restoreDefaultList = () => {
                 const existingList = document.getElementById(GROUPED_LIST_ID);
                 if (existingList) existingList.remove();
 
                 const virtuosoScroller = document.querySelector('.mx_RoomListPanel [data-testid="virtuoso-scroller"]');
                 if (virtuosoScroller) virtuosoScroller.style.display = "";
                 currentSpaceId = null;
+            };
+
+            // No header means not in a space; show default
+            if (!headerName) {
+                restoreDefaultList();
                 return;
             }
 
+            // Explicitly treat the Home tab as non-space; show default
+            if (headerName.toLowerCase() === "home") {
+                restoreDefaultList();
+                return;
+            }
+
+            // Try to resolve a space by header name
             const allRooms = client.getRooms ? client.getRooms() : [];
             const spaceRoom = allRooms.find((r) => r && (r.name || "").trim() === headerName && isSpaceRoom(r));
 
+            // If we can't resolve a space, restore default list
             if (!spaceRoom) {
-                console.log(PLUGIN_TAG, "[groups] Could not find space room for:", headerName);
+                console.log(PLUGIN_TAG, "[groups] Not a space context (header):", headerName);
+                restoreDefaultList();
                 return;
             }
 
