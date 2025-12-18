@@ -1,9 +1,9 @@
 {
-  "name": "Random Window Title",
-  "author": "Example",
+  "name": "Categories",
+  "author": "Litruv",
   "version": "1.0.0",
-  "description": "Periodically sets a random string in the window title.",
-  "gitUrl": "https://example.com/your/random-title-plugin.git",
+  "description": "A plugin that adds category support to Element.",
+  "gitUrl": "https://github.com/litruv/element-plugin-categories.git",
   "main": "main.js"
 
 }
