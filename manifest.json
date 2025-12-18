@@ -1,0 +1,9 @@
+{
+  "name": "Random Window Title",
+  "author": "Example",
+  "version": "1.0.0",
+  "description": "Periodically sets a random string in the window title.",
+  "gitUrl": "https://example.com/your/random-title-plugin.git",
+  "main": "main.js"
+
+}
